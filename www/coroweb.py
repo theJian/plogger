@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 #-*- coding: utf-8 -*-
 
-import asyncio, inspect, logging
+import asyncio, inspect, logging, os
 from aiohttp import web
 from functools import wraps
 from urllib import parse
@@ -24,7 +24,7 @@ def post(path):
     Define decorator @post('/path')
     '''
     def decorator(func):
-        @wraps(func):
+        @wraps(func)
         def wrapper(*args, **kw):
             return func(*args, **kw)
         wrapper.__method__ = 'POST'
@@ -130,6 +130,11 @@ class RequestHandler(object):
             return r
         except APIError as e:
             return dict(error=e.error, data=e.data, message=e.message)
+
+def add_static(app):
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
+    app.router.add_static('/static/', path)
+    logging.info('add static %s => %s' % ('/static/', path))
 
 def add_route(app, fn):
     method = getattr(fn, '__method__', None)
