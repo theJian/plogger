@@ -11,7 +11,7 @@ def init_jinja2(app, **kw):
     logging.info('init jinja2 ...')
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
     env = Environment(
-            loader=kw.get('path', path),
+            loader=FileSystemLoader(kw.get('path', path)),
             autoescape=kw.get('autoescape', True),
             block_start_string=kw.get('block_start_string', '{%'),
             block_end_string=kw.get('block_end_string', '%}'),
