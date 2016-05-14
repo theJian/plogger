@@ -64,7 +64,7 @@ def has_request_arg(fn):
     params = inspect.signature(fn).parameters
     found = False
     for name, param in params.items():
-        if name == 'request':
+        if name == 'request' or name == 'req':
             found = True
             continue
         if found and (param.kind != inspect.Parameter.VAR_POSITIONAL and param.kind != inspect.Parameter.KEYWORD_ONLY and param.kind != inspect.Parameter.VAR_KEYWORD):
@@ -128,8 +128,9 @@ class RequestHandler(object):
         try:
             r = await self._func(**kw)
             return r
-        except APIError as e:
-            return dict(error=e.error, data=e.data, message=e.message)
+        except Exception as e:
+            logging.error(e);
+            return;
 
 def add_static(app):
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
