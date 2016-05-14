@@ -62,4 +62,4 @@ target/
 .ipynb_checkpoints
 
 #config files
-custom.config.py
+custom_config.py
