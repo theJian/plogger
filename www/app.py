@@ -5,6 +5,7 @@ from aiohttp import web
 from jinja2 import Environment, FileSystemLoader
 import orm
 from coroweb import add_routes, add_static
+from config import configs
 
 def init_jinja2(app, **kw):
     logging.info('init jinja2 ...')
@@ -59,16 +60,14 @@ async def response_factory(app, handler):
         return res
     return response
 
-def index(req):
-    return web.Response(body=b'<h1>Awesome</h1>')
-
 async def init(loop):
-    await orm.create_pool(loop=loop, host='127.0.0.1', port=3306, user='user', password='password', db='db')
+    await orm.create_pool(loop=loop, **configs)
     app = web.Application(loop=loop, middlewares=[
          logger_factory,
          response_factory
         ])
-    init_jinja2(app, 'handlers')
+    init_jinja2(app)
+    add_routes(app, 'handlers')
     add_static(app)
     srv = await loop.create_server(app.make_handler(), '127.0.0.1', 2333)
     logging.info('server started at http://127.0.0.1:2333...')
