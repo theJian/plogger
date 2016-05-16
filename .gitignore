@@ -63,3 +63,6 @@ target/
 
 #config files
 custom_config.py
+
+# node modules
+node_modules/
