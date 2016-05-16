@@ -12,7 +12,7 @@ module.exports = {
   },
   output: {
     path: PATHS.build,
-    filename: "[name].entry.js"
+    filename: "[name].bundle.js"
   },
   module: {
     loaders: [
@@ -24,7 +24,10 @@ module.exports = {
     {
       test: /\.js$/,
       loader: 'babel',
-      include: PATHS.dev
+      include: PATHS.dev,
+      query: {
+        presets: ['es2015']
+      }
     }
     ]
   },
