@@ -1,13 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title></title>
-</head>
-<body>
-  <h1>Users</h1>
-  {% for u in users %}
-  <p>{{ u.name }} / {{ u.email }}</p>
-  {% endfor %}
-</body>
-</html>
+{% extends '__base__.html' %}
+
+{% block title %}Test{% endblock %}
+
+{% block content %}
+<h1>Users</h1>
+{% for u in users %}
+<p>{{ u.name }} / {{ u.email }}</p>
+{% endfor %}
+{% endblock %}
+
+{% block script %}
+<script src="/static/build/index.bundle.js" ></script>
+{% endblock %}
