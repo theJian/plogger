@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "py": "python www/app.py",
+    "server": "python www/app.py",
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
