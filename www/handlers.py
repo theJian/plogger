@@ -5,9 +5,22 @@
 
 import re, time, json, logging, hashlib, base64, asyncio
 
+from aiohttp import web
+
 from coroweb import get, post
 
 from models import User, Comment, Blog, next_id
+
+from config import configs
+
+COOKIE_NAME = 'cutecutecat'
+_COOKIE_KEY = configs['secret']
+
+def user2cookie(user, max_age):
+    expires = str(int(time.time() + max_age))
+    s = '%s-%s-%s-%s' % (user.id, user.passwd, expires, _COOKIE_KEY)
+    L = [user.id, expires, hashlib.sha1(s.encode('utf-8')).hexdigest()]
+    return '-'.join(L)
 
 @get('/')
 async def index(request):
@@ -25,8 +38,31 @@ async def index(request):
 @get('/api/users')
 async def api_get_users(request):
     users = await User.findAll(orderBy='created_at desc')
-    print('*******************************')
-    print(users)
     for u in users:
         u.passwd = '******'
     return dict(users=users)
+
+_RE_EMAIL = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+_RE_SHA1 = re.compile(r"^[0-9a-f]{40}")
+
+@post('/api/users')
+async def api_register_user(*, email, name, passwd):
+    if not email and not name and not passwd:
+        raise Exception('missing arguments for register')
+    if not _RE_EMAIL.match(email):
+        raise Exception('illegal email')
+    if not _RE_SHA1.match(passwd):
+        raise Exception('illegal passwd')
+    users = await User.findAll('email=?', [email])
+    if len(users) > 0:
+        raise Exception('email existed')
+    uid = next_id()
+    sha1_passwd = '%s:%s' % (uid , passwd)
+    user = User(id=uid, email=email, name=name.strip(), passwd=hashlib.sha1(sha1_passwd.encode('utf-8')).hexdigest(), image="blank:about", created_at=time.time())
+    await user.save()
+    r = web.Response()
+    r.set_cookie(COOKIE_NAME, user2cookie(user, 60*60*24), max_age=60*60*24, httponly=True)
+    user.passwd = '******'
+    r.content_type = 'application/json'
+    r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
+    return r
