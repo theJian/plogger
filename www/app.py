@@ -7,6 +7,10 @@ import orm
 from coroweb import add_routes, add_static
 from config import configs
 
+def datetime_filter(t):
+    date = datetime.fromtimestamp(t)
+    return '%s / %s, %s' % (date.month, date.day, date.year)
+
 def init_jinja2(app, **kw):
     logging.info('init jinja2 ...')
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
@@ -66,7 +70,7 @@ async def init(loop):
          logger_factory,
          response_factory
         ])
-    init_jinja2(app)
+    init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'handlers')
     add_static(app)
     srv = await loop.create_server(app.make_handler(), '127.0.0.1', 2333)
