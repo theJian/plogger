@@ -35,6 +35,12 @@ async def index(request):
         'blogs': blogs
         }
 
+@get('/register')
+async def register(request):
+    return {
+        '__template__': 'register.html'
+        }
+
 @get('/api/users')
 async def api_get_users(request):
     users = await User.findAll(orderBy='created_at desc')
