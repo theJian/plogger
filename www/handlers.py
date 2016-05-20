@@ -22,6 +22,23 @@ def user2cookie(user, max_age):
     L = [user.id, expires, hashlib.sha1(s.encode('utf-8')).hexdigest()]
     return '-'.join(L)
 
+async cookie2user(cookie_str):
+    if not cookie_str:
+        return None
+    L = cookie_str.split('-')
+    uid, expires, sha1 = L
+    if int(expires) < time.time():
+        return None
+    user = User.find(uid)
+    if not user:
+        return None
+    s = '%s-%s-%s-%s' % (uid, user.passwd, expires, _COOKIE_KEY)
+    if sha1 != hashlib.sha1(s.encode('utf-8')).hexdigest():
+        logging.info('invalid cookie')
+        return None
+    user.passwd = '******'
+    return user
+
 @get('/')
 async def index(request):
     summary = 'Amet id magni animi in harum corporis labore. Illum aperiam ducimus sapiente distinctio vitae! Autem harum nesciunt officia aspernatur ipsam maxime, ab consequatur quibusdam soluta? Quasi quaerat beatae consequuntur odit?'
@@ -82,7 +99,7 @@ async def auth(*, email, passwd):
         raise Exception('wrong email address or password')
     user = users[0]
     sha1_passwd = '%s:%s' % (user.id, passwd)
-    if user.passwd !== hashlib.sha1(sha1_passwd.encode('utf-8')).hexdigest():
+    if user.passwd != hashlib.sha1(sha1_passwd.encode('utf-8')).hexdigest():
         raise Exception('wrong email address or password')
     r = web.Response()
     r.set_cookie(COOKIE_NAME, user2cookie(user, 60*60*24), max_age=60*60*24, httponly=True)
