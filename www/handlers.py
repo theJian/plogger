@@ -72,3 +72,23 @@ async def api_register_user(*, email, name, passwd):
     r.content_type = 'application/json'
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
     return r
+
+@post('/api/auth')
+async def auth(*, email, passwd):
+    if not email or not passwd:
+        raise Exception('missing arguments for register')
+    users = await User.findAll('email=?', [email])
+    if len(users) == 0:
+        raise Exception('wrong email address or password')
+    user = users[0]
+    sha1_passwd = '%s:%s' % (user.id, passwd)
+    if user.passwd !== hashlib.sha1(sha1_passwd.encode('utf-8')).hexdigest():
+        raise Exception('wrong email address or password')
+    r = web.Response()
+    r.set_cookie(COOKIE_NAME, user2cookie(user, 60*60*24), max_age=60*60*24, httponly=True)
+    user.passwd = '******'
+    r.content_type = 'application/json'
+    r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
+    return r
+
+
