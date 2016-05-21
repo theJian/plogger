@@ -3,7 +3,7 @@
 
 'url handlers'
 
-import re, time, json, logging, hashlib, base64, asyncio
+import re, time, json, logging, hashlib, base64, asyncio, markdown2
 
 from aiohttp import web
 
@@ -15,6 +15,10 @@ from config import configs
 
 COOKIE_NAME = 'cutecutecat'
 _COOKIE_KEY = configs['secret']
+
+def escaped_text(text):
+    lines = map(lambda s: '<p>%s</p>' % s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'), filter(lambda s: s.strip() != '', text.split('\n')))
+    return ''.join(lines)
 
 def user2cookie(user, max_age):
     expires = str(int(time.time() + max_age))
@@ -78,6 +82,19 @@ async def create_blog(request):
         '__template__': 'editor.html'
         }
 
+@get('/blog/{id}')
+async def get_blog(request, *, id):
+    blog = await Blog.find(id)
+    comments = await Comment.findAll('blog_id=?', [id], orderBy='created_at desc')
+    for c in comments:
+        c.html_content = markdown2.markdown(c.content)
+    blog.html_content = markdown2.markdown(blog.content)
+    return {
+        '__template__': 'blog.html',
+        'comments': comments,
+        'blog': blog
+        }
+
 @get('/api/users')
 async def api_get_users(request):
     users = await User.findAll(orderBy='created_at desc')
@@ -127,6 +144,11 @@ async def auth(*, email, passwd):
     r.content_type = 'application/json'
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
     return r
+
+@get('/api/blogs/{id}')
+async def api_get_blog_by_id(*, id):
+    blog = await Blog.find(id)
+    return blog
 
 @post('/api/blogs')
 async def api_create_blog(request, *, name, summary, content):
