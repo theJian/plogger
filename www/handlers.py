@@ -22,14 +22,14 @@ def user2cookie(user, max_age):
     L = [user.id, expires, hashlib.sha1(s.encode('utf-8')).hexdigest()]
     return '-'.join(L)
 
-async cookie2user(cookie_str):
+async def cookie2user(cookie_str):
     if not cookie_str:
         return None
     L = cookie_str.split('-')
     uid, expires, sha1 = L
     if int(expires) < time.time():
         return None
-    user = User.find(uid)
+    user = await User.find(uid)
     if not user:
         return None
     s = '%s-%s-%s-%s' % (uid, user.passwd, expires, _COOKIE_KEY)
@@ -107,5 +107,4 @@ async def auth(*, email, passwd):
     r.content_type = 'application/json'
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
     return r
-
 

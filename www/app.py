@@ -6,7 +6,7 @@ from jinja2 import Environment, FileSystemLoader
 import orm
 from coroweb import add_routes, add_static
 from config import configs
-from handler import COOKIE_NAME, cookie2user
+from handlers import COOKIE_NAME, cookie2user
 
 def datetime_filter(t):
     date = datetime.fromtimestamp(t)
@@ -42,7 +42,7 @@ async def auth_factory(app, handler):
         request.__user__ = None
         cookie_str = request.cookies.get(COOKIE_NAME)
         if cookie_str:
-            user = cookie2user(cookie_str)
+            user = await cookie2user(cookie_str)
             if user:
                 logging.info('auth user %s' % user.email)
                 request.__user__ = user
