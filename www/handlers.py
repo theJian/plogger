@@ -58,6 +58,12 @@ async def register(request):
         '__template__': 'register.html'
         }
 
+@get('/login')
+async def login(request):
+    return {
+        '__template__': 'login.html'
+        }
+
 @get('/api/users')
 async def api_get_users(request):
     users = await User.findAll(orderBy='created_at desc')

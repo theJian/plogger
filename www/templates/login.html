@@ -1,0 +1,49 @@
+{% extends '__base__.html' %}
+
+{% block title %} Login {% endblock %}
+
+{% block beforeHead %} <link rel="stylesheet" href="static/style/login.css"> {% endblock %}
+
+{% block content %}
+<form class="form-login">
+  <h2 class="form-login-heading">Login</h2>
+  <label class="sr-only" for="inputEmail">Email address</label>
+  <input id="inputEmail" class="form-control" type="email" name="email" placeholder="Email Address" required autofocus>
+  <label class="sr-only" for="inputPassword">Password</label>
+  <input id="inputPassword" class="form-control" type="password" name="password" placeholder="Password" required>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+</form>
+{% endblock %}
+
+{% block script %}
+$(document).ready(function() {
+$('form').on('submit', function(e) {
+  e.preventDefault();
+  var data = {
+    email: $('#inputEmail')[0].value.trim().toLowerCase(),
+    passwd: $('#inputPassword')[0].value
+  };
+
+  if(!data.email) {
+    console.log('Email is required');
+    return;
+  }
+
+  if(!data.passwd) {
+    console.log('Password is required');
+    return;
+  }
+
+  data.passwd = CryptoJS.SHA1(data.email + ':' + data.passwd).toString()
+
+  $.ajax({
+    method: 'POST',
+    url: '/api/users',
+    data: data
+    }).then(function(data, status) {
+      console.log(data, status);
+    });
+
+})
+})
+{% endblock %}
