@@ -65,6 +65,13 @@ async def login(request):
         '__template__': 'login.html'
         }
 
+@get('/logout')
+async def logout(request):
+    r = web.HTTPFound('/')
+    r.set_cookie(COOKIE_NAME, '-deleted-', max_age=0, httponly=True)
+    logging.info('user logged out.')
+    return r
+
 @get('/api/users')
 async def api_get_users(request):
     users = await User.findAll(orderBy='created_at desc')
