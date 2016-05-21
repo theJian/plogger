@@ -56,7 +56,8 @@ $('form').on('submit', function(e) {
     url: '/api/users',
     data: data
     }).then(function(data, status) {
-      console.log(data);
+      console.log(data, status);
+      window.location = '../';
     });
 }) 
 })

@@ -49,7 +49,8 @@ async def index(request):
         ]
     return {
         '__template__': 'blog.html',
-        'blogs': blogs
+        'blogs': blogs,
+        'user': request.__user__
         }
 
 @get('/register')

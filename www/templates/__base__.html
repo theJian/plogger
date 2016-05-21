@@ -11,21 +11,29 @@
   <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a class="navbar-brand" href="brand">Plogger</a>
+        <a class="navbar-brand" href="/">Plogger</a>
       </div>
-      <ul class="nav navbar-nav">
-        <li><a href="#">Link1</a></li>
-        <li><a href="#">Link2</a></li>
-        <li><a href="#">Link3</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        {% if user %}
-        <li><a href="#">{{user.name}}</a></li>
-        {% else %}
-        <li><a href="/register">register</a></li>
-        <li><a href="/login">login</a></li>
-        {% endif %}
-      </ul>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="#">Link1</a></li>
+          <li><a href="#">Link2</a></li>
+          <li><a href="#">Link3</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          {% if user %}
+          <li class="dropdown">
+            <a id="userDropdownMenu" class="dropdown-toggle" data-toggle="dropdown" role="button">login as <strong>{{user.name}}</strong> <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">profile</a></li>
+              <li><a href="#">log out</a></li>
+            </ul>
+          </li>
+          {% else %}
+          <li><a href="/register">register</a></li>
+          <li><a href="/login">login</a></li>
+          {% endif %}
+        </ul>
+      </div>
     </div>
   </nav>
   <main class="main">
@@ -39,6 +47,7 @@
     </div>
   </footer>
   <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/sha1.js"></script>
   <script>
   {% block script %}{% endblock %}
