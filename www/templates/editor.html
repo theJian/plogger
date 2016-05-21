@@ -1,0 +1,66 @@
+{% extends '__base__.html' %}
+
+{% block title %} Compose new Blog {% endblock %}
+
+{% block beforeHead %} <link rel="stylesheet" href="/static/style/editor.css"> {% endblock %}
+
+{% block content %}
+<div class="editor">
+  <div class="panel panel-default blog-title">
+    <div class="panel-heading">Title</div>
+    <div class="panel-body">
+      <input id="inputTitle" class="form-control" type="text" name="title" placeholder="Title" required>
+    </div>
+  </div>
+  <div class="panel panel-default blog-summary">
+    <div class="panel-heading">Summary</div>
+    <div class="panel-body">
+      <textarea id="inputSummary" class="form-control" name="summary" cols="30" rows="10" placeholder="Summary" required></textarea>
+    </div>
+  </div>
+  <div class="panel panel-default blog-content">
+    <div class="panel-heading">Content</div>
+    <div class="panel-body">
+      <textarea id="inputContent" class="form-control" name="content" cols="30" rows="10" placeholder="Content" required></textarea>
+    </div>
+  </div>
+  <button class="btn btn-default pull-right" type="button">Submit</button>
+</div>
+{% endblock %}
+
+{% block script %}
+$(document).ready(function() {
+$('button').on('click', function(e) {
+  e.preventDefault();
+  var data = {
+    name: $('#inputTitle')[0].value.trim(),
+    summary: $('#inputSummary')[0].value.trim(),
+    content: $('#inputContent')[0].value.trim()
+  }
+
+  if(!data.name) {
+    console.log('blog title is required');
+    return;
+  }
+
+  if(!data.summary) {
+    console.log('blog summary is required');
+    return;
+  }
+
+  if(!data.content) {
+    console.log('blog content is required');
+    return;
+  }
+
+  $.ajax({
+    method: 'POST',
+    url: '/api/blogs',
+    data: data
+    }).then(function(data, status) {
+      console.log(data, status);
+      window.location = '/';
+    });
+})
+})
+{% endblock %}

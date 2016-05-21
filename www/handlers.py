@@ -72,6 +72,12 @@ async def logout(request):
     logging.info('user logged out.')
     return r
 
+@get('/manage/blogs/create')
+async def create_blog(request):
+    return {
+        '__template__': 'editor.html'
+        }
+
 @get('/api/users')
 async def api_get_users(request):
     users = await User.findAll(orderBy='created_at desc')
@@ -122,3 +128,16 @@ async def auth(*, email, passwd):
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
     return r
 
+@post('/api/blogs')
+async def api_create_blog(request, *, name, summary, content):
+    if not request.__user__ or not request.__user__.admin:
+        raise Exception('permission not allow')
+    if not name.strip():
+        raise Exception('blog name can\' be empty')
+    if not summary.strip():
+        raise Exception('blog summary can\' be empty')
+    if not content.strip():
+        raise Exception('blog content can\'t be empty')
+    blog = Blog(user_id=request.__user__.id, user_name=request.__user__.name, user_image=request.__user__.image, name=name.strip(), summary=summary.strip(), content=content.strip())
+    await blog.save()
+    return blog
