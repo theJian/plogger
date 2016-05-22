@@ -76,6 +76,13 @@ async def logout(request):
     logging.info('user logged out.')
     return r
 
+@get('/manage/blogs')
+async def manage_blogs(request, *, page=1):
+    return {
+        '__template__': 'manage_blogs.html',
+        'page': page
+        }
+
 @get('/manage/blogs/create')
 async def create_blog(request):
     return {
@@ -149,6 +156,13 @@ async def auth(*, email, passwd):
 async def api_get_blog_by_id(*, id):
     blog = await Blog.find(id)
     return blog
+
+@get('/api/blogs')
+async def api_blogs(*, page=1, page_size=10):
+    blogs = await Blog.findAll(orderBy='created_at desc', limit=((page_index-1)*page_size, page_size))
+    blog_count = len(blogs)
+    page_count = blog_count // page_size + int(blog_count % page_size > 0)
+    return dict(page=page, page_size=page_size, page_count=page_count, blog_count=blog_count, blogs=blogs)
 
 @post('/api/blogs')
 async def api_create_blog(request, *, name, summary, content):
