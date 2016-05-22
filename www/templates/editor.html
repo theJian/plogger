@@ -28,7 +28,7 @@
 </div>
 {% endblock %}
 
-{% block script %}
+{% block inlineScript %}
 $(document).ready(function() {
 $('button').on('click', function(e) {
   e.preventDefault();
@@ -59,7 +59,7 @@ $('button').on('click', function(e) {
     data: data
     }).then(function(data, status) {
       console.log(data, status);
-      window.location = '/';
+      window.location = '/manage/blogs';
     });
 })
 })
