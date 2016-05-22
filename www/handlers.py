@@ -159,8 +159,9 @@ async def api_get_blog_by_id(*, id):
 
 @get('/api/blogs')
 async def api_blogs(*, page=1, page_size=10):
+    page = int(page)
+    blog_count = await Blog.findNumber('count(*)')
     blogs = await Blog.findAll(orderBy='created_at desc', limit=((page-1)*page_size, page_size))
-    blog_count = len(blogs)
     page_count = blog_count // page_size + int(blog_count % page_size > 0)
     return dict(page=page, page_size=page_size, page_count=page_count, blog_count=blog_count, blogs=blogs)
 
@@ -177,3 +178,10 @@ async def api_create_blog(request, *, name, summary, content):
     blog = Blog(user_id=request.__user__.id, user_name=request.__user__.name, user_image=request.__user__.image, name=name.strip(), summary=summary.strip(), content=content.strip())
     await blog.save()
     return blog
+
+# @get('/api/test/add-blogs')
+# async def api_create_blog(request, *, count=100):
+#     for i in range(count):
+#         blog = Blog(user_id="001463818576693a6425b8db6c2418795eede6d6dd6eb02000", user_name="thejian", user_image="blank:about", name="test"+str(i), summary="It's summary", content="It's content")
+#         await blog.save()
+#     return 'success'
