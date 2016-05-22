@@ -159,7 +159,7 @@ async def api_get_blog_by_id(*, id):
 
 @get('/api/blogs')
 async def api_blogs(*, page=1, page_size=10):
-    blogs = await Blog.findAll(orderBy='created_at desc', limit=((page_index-1)*page_size, page_size))
+    blogs = await Blog.findAll(orderBy='created_at desc', limit=((page-1)*page_size, page_size))
     blog_count = len(blogs)
     page_count = blog_count // page_size + int(blog_count % page_size > 0)
     return dict(page=page, page_size=page_size, page_count=page_count, blog_count=blog_count, blogs=blogs)
