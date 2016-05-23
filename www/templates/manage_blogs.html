@@ -1,12 +1,17 @@
-{% extends '__base__.html' %}
+{% extends '__manage__.html' %}
 
 {% block title %} Blogs {% endblock %}
 
-{% block content %}
-<div id="content"></div>
+{% block contentBody %}
+<div id="contentBody"></div>
 {% endblock %}
 
 {% block script %}
-<script type="text/babel" src="/static/js/blog-list.js"></script>
+<script type="text/babel" src="/static/js/blog-manage-panel.js"></script>
 {% endblock %}
 
+{% block inlineScript %}
+$(document).ready(function() {
+  $('.blogs').addClass('active');
+});
+{% endblock %}

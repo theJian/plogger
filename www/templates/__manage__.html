@@ -1,0 +1,16 @@
+{% extends '__base__.html' %}
+
+{% block content %}
+<div id="content">
+  <div id="tabs-wrapper">
+    <ul class="nav nav-pills">
+      <li class="blogs" role="presentation"><a href="#">Blogs</a></li>
+      <li class="users" role="presentation"><a href="#">Users</a></li>
+      <li class="comments" role="presentation"><a href="#">Comments</a></li>
+    </ul>
+    <hr>
+  </div>
+  {% block contentBody %}{% endblock %}
+</div>
+{% endblock %}
+

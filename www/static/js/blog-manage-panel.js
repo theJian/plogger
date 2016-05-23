@@ -148,5 +148,5 @@ var BlogControlPanel = React.createClass({
 
 ReactDOM.render(
   <BlogControlPanel url="/api/blogs" />,
-  $('#content')[0]
+  $('#contentBody')[0]
 );

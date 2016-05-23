@@ -80,6 +80,10 @@ async def logout(request):
     logging.info('user logged out.')
     return r
 
+@get('/manage')
+async def manage(request):
+    return web.HTTPFound('/manage/blogs')
+
 @get('/manage/blogs')
 async def manage_blogs(request, *, page=1):
     return {
