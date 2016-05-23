@@ -171,7 +171,7 @@ async def api_blogs(*, page=1, page_size=10):
 
 @post('/api/blogs')
 async def api_create_blog(request, *, name, summary, content):
-    if have_permission(request):
+    if not have_permission(request):
         raise Exception('permission denied')
     if not name.strip():
         raise Exception('blog name can\' be empty')
@@ -181,6 +181,34 @@ async def api_create_blog(request, *, name, summary, content):
         raise Exception('blog content can\'t be empty')
     blog = Blog(user_id=request.__user__.id, user_name=request.__user__.name, user_image=request.__user__.image, name=name.strip(), summary=summary.strip(), content=content.strip())
     await blog.save()
+    return blog
+
+@post('/api/blogs/delete')
+async def api_delete_blog(request, *, id):
+    if not have_permission(request):
+        raise Exception('permission denied')
+    if not id:
+        raise Exception('blog id required')
+    blog = await Blog.find(id)
+    if blog:
+        await blog.remove()
+    return blog
+
+@post('/api/blogs/update')
+async def api_update_blog(request, *, id, name, summary, content):
+    if not have_permission(request):
+        raise Exception('permission denied')
+    if not id:
+        raise Exception('blog id required')
+    if not name.strip():
+        raise Exception('blog name can\'t be empty')
+    if not summary.strip():
+        raise Exception('blog summary can\'t be empty')
+    if not content.strip():
+        raise Exception('blog content can\'t be empty')
+    blog = await Blog.find(id)
+    if blog:
+        await blog.update(name=name.strip(), summary=summary.strip(), content.strip())
     return blog
 
 # @get('/api/test/add-blogs')
