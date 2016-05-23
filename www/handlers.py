@@ -16,6 +16,10 @@ from config import configs
 COOKIE_NAME = 'cutecutecat'
 _COOKIE_KEY = configs['secret']
 
+def have_permission(request):
+    return request.__user__ and request.__user__.admin
+
+
 def escaped_text(text):
     lines = map(lambda s: '<p>%s</p>' % s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'), filter(lambda s: s.strip() != '', text.split('\n')))
     return ''.join(lines)
@@ -167,8 +171,8 @@ async def api_blogs(*, page=1, page_size=10):
 
 @post('/api/blogs')
 async def api_create_blog(request, *, name, summary, content):
-    if not request.__user__ or not request.__user__.admin:
-        raise Exception('permission not allow')
+    if have_permission(request):
+        raise Exception('permission denied')
     if not name.strip():
         raise Exception('blog name can\' be empty')
     if not summary.strip():
