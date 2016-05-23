@@ -1,0 +1,16 @@
+{% extends '__manage__.html' %}
+
+{% block title %} Comments {% endblock %}
+
+{% block contentBody %}
+<div id="contentBody"></div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block inlineScript %}
+$(document).ready(function() {
+  $('.comments').addClass('active');
+});
+{% endblock %}

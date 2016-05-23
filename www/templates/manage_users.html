@@ -1,0 +1,16 @@
+{% extends '__manage__.html' %}
+
+{% block title %} Users {% endblock %}
+
+{% block contentBody %}
+<div id="contentBody"></div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block inlineScript %}
+$(document).ready(function() {
+  $('.users').addClass('active');
+});
+{% endblock %}

@@ -85,10 +85,21 @@ async def manage(request):
     return web.HTTPFound('/manage/blogs')
 
 @get('/manage/blogs')
-async def manage_blogs(request, *, page=1):
+async def manage_blogs(request):
     return {
-        '__template__': 'manage_blogs.html',
-        'page': page
+        '__template__': 'manage_blogs.html'
+        }
+
+@get('/manage/users')
+async def manage_users(request):
+    return {
+        '__template__': 'manage_users.html'
+        }
+
+@get('/manage/comments')
+async def manage_comments(request):
+    return {
+        '__template__': 'manage_comments.html'
         }
 
 @get('/manage/blogs/editor')
