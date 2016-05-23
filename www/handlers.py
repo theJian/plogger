@@ -130,7 +130,7 @@ async def api_get_users(*, page=1, page_size=10):
     for u in users:
         u.passwd = '******'
     page_count = user_count // page_size + int(user_count % page_size > 0)
-    return dict(page=page, page_size=page_size, page_count=page_count, user_count, users=users)
+    return dict(page=page, page_size=page_size, page_count=page_count, user_count=user_count, users=users)
 
 _RE_EMAIL = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 _RE_SHA1 = re.compile(r"^[0-9a-f]{40}")
