@@ -1,10 +1,14 @@
 var BlogItem = React.createClass({
+  sec2Date: function(sec) {
+    let dt = new Date(sec * 1000);
+    return dt.getFullYear() + '/' + (dt.getMonth() + 1) + '/' + dt.getDate();
+  },
   render: function() {
     return (
         <tr>
           <td>{this.props.title}</td>
           <td>{this.props.author}</td>
-          <td>{this.props.createdAt}</td>
+          <td>{this.sec2Date(this.props.createdAt)}</td>
           <td>
             <div className="btn-group" role="group">
               <button type="button" className="btn btn-default" onClick={this.props.onClickDelete}><span className="glyphicon glyphicon-trash" aria-hidden="true"></span> delete </button> <button type="button" className="btn btn-default" onClick={this.props.onClickEdit}><span className="glyphicon glyphicon-pencil" aria-hidden="true"></span> edit </button>

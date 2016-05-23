@@ -1,10 +1,14 @@
 var UserItem = React.createClass({
+  sec2Date: function(sec) {
+    let dt = new Date(sec * 1000);
+    return dt.getFullYear() + '/' + (dt.getMonth() + 1) + '/' + dt.getDate();
+  },
   render: function() {
     return (
       <tr>
         <td>{this.props.name}</td>
         <td>{this.props.email}</td>
-        <td>{this.props.createdAt}</td>
+        <td>{this.sec2Date(this.props.createdAt)}</td>
         <td>{this.props.admin ? 'Yes' : 'No'}</td>
       </tr>
     );
