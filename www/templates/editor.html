@@ -2,8 +2,7 @@
 
 {% block title %} Compose new Blog {% endblock %}
 
-{% block beforeHead %} <link rel="stylesheet" href="/static/style/editor.css"> {% endblock %}
-
+{% block beforeHead %} <link rel="stylesheet" href="/static/style/editor.css"> {% endblock %} 
 {% block content %}
 <div class="editor">
   <div class="panel panel-default blog-title">
@@ -30,6 +29,16 @@
 
 {% block inlineScript %}
 $(document).ready(function() {
+{% if id %}
+$.ajax({
+  method: 'GET',
+  url: '/api/blogs/{{id}}',
+  }).then(function(data, status) {
+    $('#inputTitle')[0].value = data.name;
+    $('#inputSummary')[0].value = data.summary;
+    $('#inputContent')[0].value = data.content;
+  });
+{% endif %}
 $('button').on('click', function(e) {
   e.preventDefault();
   var data = {
@@ -53,6 +62,17 @@ $('button').on('click', function(e) {
     return;
   }
 
+  {% if id %}
+  data.id = '{{id}}'
+  $.ajax({
+    method: 'POST',
+    url: '/api/blogs/update',
+    data: data
+    }).then(function(data, status) {
+      console.log(data, status);
+      window.location = '/manage/blogs';
+    });
+  {% else %}
   $.ajax({
     method: 'POST',
     url: '/api/blogs',
@@ -61,6 +81,7 @@ $('button').on('click', function(e) {
       console.log(data, status);
       window.location = '/manage/blogs';
     });
+  {% endif %}
 })
 })
 {% endblock %}

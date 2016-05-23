@@ -87,10 +87,11 @@ async def manage_blogs(request, *, page=1):
         'page': page
         }
 
-@get('/manage/blogs/create')
-async def create_blog(request):
+@get('/manage/blogs/editor')
+async def create_blog(request, *, id=None):
     return {
-        '__template__': 'editor.html'
+        '__template__': 'editor.html',
+        'id': id
         }
 
 @get('/blog/{id}')
@@ -208,7 +209,10 @@ async def api_update_blog(request, *, id, name, summary, content):
         raise Exception('blog content can\'t be empty')
     blog = await Blog.find(id)
     if blog:
-        await blog.update(name=name.strip(), summary=summary.strip(), content.strip())
+        blog.name = name.strip()
+        blog.summary = summary.strip()
+        blog.content = content.strip()
+        await blog.update()
     return blog
 
 # @get('/api/test/add-blogs')

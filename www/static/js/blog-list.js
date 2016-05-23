@@ -7,7 +7,7 @@ var BlogItem = React.createClass({
           <td>{this.props.createdAt}</td>
           <td>
             <div className="btn-group" role="group">
-              <button type="button" className="btn btn-default"><span className="glyphicon glyphicon-trash" aria-hidden="true"></span> delete </button> <button type="button" className="btn btn-default"><span className="glyphicon glyphicon-pencil" aria-hidden="true"></span> edit </button>
+              <button type="button" className="btn btn-default"><span className="glyphicon glyphicon-trash" aria-hidden="true"></span> delete </button> <button type="button" className="btn btn-default" onClick={this.props.onClickEdit}><span className="glyphicon glyphicon-pencil" aria-hidden="true"></span> edit </button>
             </div>
           </td>
         </tr>
@@ -17,6 +17,7 @@ var BlogItem = React.createClass({
 
 var BlogList = React.createClass({
   render: function() {
+    const onClickEdit = this.props.onClickEdit
     return (
         <table id="blogList" className="table table-striped">
           <thead>
@@ -30,7 +31,7 @@ var BlogList = React.createClass({
           <tbody>
           {
             this.props.blogs.map(function(blog) {
-              return <BlogItem title={blog.name} author={blog.user_name} createdAt={blog.created_at} key={blog.id}/>;
+              return <BlogItem title={blog.name} author={blog.user_name} createdAt={blog.created_at} key={blog.id} onClickEdit={onClickEdit.bind(null, blog.id)}/>;
             })
           }
           </tbody>
@@ -50,7 +51,10 @@ var BlogControlPanel = React.createClass({
     });
   },
   jumpToComposePage: function() {
-    window.location = '/manage/blogs/create';
+    window.location = '/manage/blogs/editor';
+  },
+  onClickEdit: function(id) {
+    window.location = '/manage/blogs/editor?' + $.param({id:id});
   },
   getNext: function(e) {
     e.preventDefault();
@@ -114,7 +118,7 @@ var BlogControlPanel = React.createClass({
     return (
         <div>
           <button type="button" className="btn btn-default" onClick={this.jumpToComposePage}>Compose</button>
-          <BlogList blogs={this.state.blogs}/>
+          <BlogList blogs={this.state.blogs} onClickEdit={this.onClickEdit}/>
           <nav>
             <ul className="pager">
               <li className={'previous' + (this.state.page > 1 ? '' : ' disabled')} onClick={this.getPrev}><a role="button"><span aria-hidden="true">&larr;</span></a></li>

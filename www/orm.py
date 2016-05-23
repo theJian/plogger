@@ -173,6 +173,7 @@ class Model(dict, metaclass=ModelMetaclass):
 
     async def update(self):
         args = list(map(self.getValue, self.__fields__))
+        print('***************************', args)
         args.append(self.getValue(self.__primary_key__))
         rows = await execute(self.__update__, args)
         if rows != 1:
