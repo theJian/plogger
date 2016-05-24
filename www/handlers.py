@@ -282,6 +282,16 @@ async def api_update_blog(request, *, id, name, summary, content):
         await blog.update()
     return blog
 
+@post('/api/comments')
+async def api_create_comments(request, *, blog_id, content):
+    if not request.__user__:
+        raise Exception('user not found')
+    if not blog_id:
+        raise Exception('blog id not found')
+    comment = Comment(blog_id=blog_id, user_id=request.__user__.id, user_name=request.__user__.name, user_image='blank:about', content=content)
+    await comment.save()
+    return comment
+
 # @get('/api/test/add-blogs')
 # async def api_create_blog(request, *, count=100):
 #     for i in range(count):
