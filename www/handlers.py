@@ -80,6 +80,15 @@ async def logout(request):
     logging.info('user logged out.')
     return r
 
+@get('/profile')
+async def profile(request):
+    if not request.__user__:
+        return web.HTTPFound('/login')
+    return {
+        '__template__': 'profile.html',
+        'user': request.__user__
+        }
+
 @get('/manage')
 async def manage(request):
     return web.HTTPFound('/manage/blogs')

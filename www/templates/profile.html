@@ -1,0 +1,41 @@
+{% extends '__base__.html' %}
+
+{% block title %} Profile {% endblock %}
+
+{% block beforeHead %} <link rel="stylesheet" href="static/style/profile.css"> {% endblock %}
+
+{% block content %}
+<form class="form-horizontal form-profile">
+  <div class="form-group">
+    <label class="col-sm-4 control-label" for="inputName">Name</label>
+    <div class="col-sm-8">
+      <input id="inputName" class="form-control" type="text" placeholder="name" value={{user.name}}>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-4 control-label" for="inputEmail">Email</label>
+    <div class="col-sm-8">
+      <input id="inputEmail" class="form-control" type="email" placeholder="email" value={{user.email}}>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-4 control-label" for="inputNewPasswd">New Password</label>
+    <div class="col-sm-8">
+      <input id="inputNewPasswd" class="form-control" type="password">
+      <span class="help-block">Leave it blank if you don't wanna change your password</span>
+    </div>
+  </div>
+  <hr>
+  <div class="form-group">
+    <label class="col-sm-4 control-label" for="inputPasswd">Password</label>
+    <div class="col-sm-8">
+      <input id="inputPasswd" class="form-control" type="password">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-12">
+      <button class="btn btn-primary pull-right" type="submit">Submit</button>
+    </div>
+  </div>
+</form>
+{% endblock %}
