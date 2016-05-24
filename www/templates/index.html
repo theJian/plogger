@@ -9,12 +9,23 @@
       <article class="blog-post">
         <h2 class="blog-post-title"><a href="/blog/{{blog.id}}">{{blog.name}}</a></h2>
         <p class="blog-post-meta">
-          posted on {{blog.created_at|datetime}}
+        posted on {{blog.created_at|datetime}} by {{blog.user_name}}
         </p>
         <p class="blog-post-summary">{{blog.summary}}</p>
         <p><a href="/blog/{{blog.id}}">continue</a></p>
       </article>
+      <hr>
     {% endfor %}
+    <nav>
+      <ul class="pager">
+        {% if prev_page %}
+          <li class="previous"><a href="/?page={{prev_page}}" role="button"><span aria-hidden="true">&larr; newer</span></a></li>
+        {% endif %}
+        {% if next_page %}
+          <li class="next"><a href="/?page={{next_page}}" role="button"><span aria-hidden="true">&rarr; older</span></a></li>
+        {% endif %}
+      </ul>
+    </nav>
   </div>
   <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
     <div class="sidebar-module">

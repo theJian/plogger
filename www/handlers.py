@@ -48,17 +48,19 @@ async def cookie2user(cookie_str):
     return user
 
 @get('/')
-async def index(request):
-    summary = 'Amet id magni animi in harum corporis labore. Illum aperiam ducimus sapiente distinctio vitae! Autem harum nesciunt officia aspernatur ipsam maxime, ab consequatur quibusdam soluta? Quasi quaerat beatae consequuntur odit?'
-    blogs = [
-        Blog(id=1, name='Article1', summary=summary, created_at=time.time()-60),
-        Blog(id=2, name='Article2', summary=summary, created_at=time.time()-300),
-        Blog(id=3, name='Article3', summary=summary, created_at=time.time()-3600)
-        ]
+async def index(request, *, page=1):
+    page = int(page)
+    page_size = 10
+    blog_count = await Blog.findNumber('count(*)')
+    page_count = blog_count // page_size + int(blog_count % page_size > 0)
+    blogs = await Blog.findAll(orderBy='created_at desc', limit=((page-1)*page_size, page_size))
+    blogs = [Blog(id=blog.id, user_name=blog.user_name, name=blog.name, summary=blog.summary, created_at=blog.created_at) for blog in blogs]
     return {
         '__template__': 'index.html',
         'blogs': blogs,
-        'user': request.__user__
+        'user': request.__user__,
+        'prev_page': (page - 1) if page > 1 else None,
+        'next_page': (page + 1) if page < page_count else None
         }
 
 @get('/register')
