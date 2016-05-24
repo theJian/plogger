@@ -1,0 +1,31 @@
+{% extends '__base__.html' %}
+
+{% block title %} Articles {% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-8 blog-main">
+    {% for blog in blogs %}
+      <article class="blog-post">
+        <h2 class="blog-post-title"><a href="/blog/{{blog.id}}">{{blog.name}}</a></h2>
+        <p class="blog-post-meta">
+          posted on {{blog.created_at|datetime}}
+        </p>
+        <p class="blog-post-summary">{{blog.summary}}</p>
+        <p><a href="/blog/{{blog.id}}">continue</a></p>
+      </article>
+    {% endfor %}
+  </div>
+  <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+    <div class="sidebar-module">
+      <h4>Sidebar</h4>
+      <ol>
+        <li><a href="#">Link1</a></li>
+        <li><a href="#">Link2</a></li>
+        <li><a href="#">Link3</a></li>
+        <li><a href="#">Link4</a></li>
+      </ol>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -56,7 +56,7 @@ async def index(request):
         Blog(id=3, name='Article3', summary=summary, created_at=time.time()-3600)
         ]
     return {
-        '__template__': 'blog.html',
+        '__template__': 'index.html',
         'blogs': blogs,
         'user': request.__user__
         }
