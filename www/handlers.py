@@ -166,6 +166,44 @@ async def api_register_user(*, email, name, passwd):
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
     return r
 
+@post('/api/users/update')
+async def api_update_user(request, *, id, email=None, name=None, passwd=None, new_passwd=None):
+    if not id:
+        raise Exception('user ID is required')
+    if not passwd:
+        raise Exception('passwd is required')
+    user = await User.find(id)
+    should_update = False
+    if not user or user.id != request.__user__.id:
+        raise Exception('permisson denied')
+    sha1_passwd = '%s:%s' % (user.id, passwd)
+    if user.passwd != hashlib.sha1(sha1_passwd.encode('utf-8')).hexdigest():
+        raise Exception('wrong password')
+    if new_passwd:
+        if not _RE_SHA1.match(new_passwd):
+            raise Exception('illegal passwd')
+        sha1_passwd = '%s:%s' % (user.id, new_passwd)
+        user.passwd = hashlib.sha1(sha1_passwd.encode('utf-8')).hexdigest()
+        should_update = True
+    if email and email.strip() != user.email:
+        if not _RE_EMAIL.match(email):
+            raise Exception('illegal email address')
+        if not new_passwd:
+            raise Exception('new email found but new password not found')
+        user.email = email.strip()
+        should_update = True
+    if name and name.strip() != user.name:
+        user.name = name.strip()
+        should_update = True
+    if should_update:
+        await user.update()
+    r = web.Response()
+    r.set_cookie(COOKIE_NAME, user2cookie(user, 60*60*24), max_age=60*60*24, httponly=True)
+    user.passwd = '******'
+    r.content_type= 'application/json'
+    r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
+    return r
+
 @post('/api/auth')
 async def auth(*, email, passwd):
     if not email or not passwd:

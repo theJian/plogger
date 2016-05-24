@@ -39,3 +39,51 @@
   </div>
 </form>
 {% endblock %}
+
+{% block inlineScript %}
+$(document).ready(function() {
+$('form').on('submit', function(e) {
+  e.preventDefault();
+  var name = $('#inputName')[0].value.trim();
+  var email = '{{user.email}}';
+  var newEmail = $('#inputEmail')[0].value.trim().toLowerCase();
+  var newPasswd = $('#inputNewPasswd')[0].value;
+  var passwd = $('#inputPasswd')[0].value;
+
+  var data = {};
+
+  data.id = '{{user.id}}';
+
+  if(!passwd) {
+    console.error('password is required');
+  }
+
+  data.passwd = CryptoJS.SHA1(email + ':' + passwd).toString()
+
+  if(name) {
+    data.name = name;
+  }
+
+  if(email != newEmail) {
+    data.email = newEmail;
+    data.new_passwd = CryptoJS.SHA1(newEmail + ':' + passwd).toString();
+  }
+
+  if(newPasswd) {
+    if(data.email) {
+      data.new_passwd = CryptoJS.SHA1(data.email + ':' + newPasswd).toString();
+    } else {
+      data.new_passwd = CryptoJS.SHA1(email + ':' + newPasswd).toString();
+    }
+  }
+
+  $.ajax({
+    type: 'POST',
+    url: '/api/users/update',
+    data: data
+    }).then(function(data, status) {
+      window.location = '/profile';
+    });
+})
+})
+{% endblock %}
