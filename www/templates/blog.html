@@ -41,7 +41,7 @@
               <h3 class="panel-title">{{comment.user_name}}</h3>
             </div>
             <div class="panel-body">
-              {{comment.content}}
+              {{comment.html_content|safe}}
             </div>
           </div>
         {% endfor %}
@@ -70,6 +70,7 @@ $.ajax({
   dataType: 'json',
   data: data
   }).then(function(data, status) {
+    console.log('***********************');
     console.log(data, status);
     $('.comments-form fieldset').prop('disabled', false);
     $('#inputComments')[0].value = '';
@@ -79,7 +80,7 @@ $.ajax({
           '<h3 class="panel-title">' + data.user_name + '</h3>' +
         '</div>' +
         '<div class="panel-body">' +
-          data.content +
+          data.html_content +
         '</div>' +
       '</div>'
     );

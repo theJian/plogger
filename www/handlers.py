@@ -125,8 +125,8 @@ async def get_blog(request, *, id):
     blog = await Blog.find(id)
     comments = await Comment.findAll('blog_id=?', [id], orderBy='created_at desc')
     for c in comments:
-        c.html_content = markdown2.markdown(c.content)
-    blog.html_content = markdown2.markdown(blog.content)
+        c.html_content = markdown2.markdown(c.content, safe_mode=True)
+    blog.html_content = markdown2.markdown(blog.content, safe_mode=True)
     return {
         '__template__': 'blog.html',
         'comments': comments,
@@ -290,6 +290,7 @@ async def api_create_comments(request, *, blog_id, content):
         raise Exception('blog id not found')
     comment = Comment(blog_id=blog_id, user_id=request.__user__.id, user_name=request.__user__.name, user_image='blank:about', content=content)
     await comment.save()
+    comment.html_content = markdown2.markdown(comment.content, safe_mode=True)
     return comment
 
 # @get('/api/test/add-blogs')
