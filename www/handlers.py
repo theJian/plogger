@@ -98,26 +98,30 @@ async def manage(request):
 @get('/manage/blogs')
 async def manage_blogs(request):
     return {
-        '__template__': 'manage_blogs.html'
+        '__template__': 'manage_blogs.html',
+        'user': request.__user__
         }
 
 @get('/manage/users')
 async def manage_users(request):
     return {
-        '__template__': 'manage_users.html'
+        '__template__': 'manage_users.html',
+        'user': request.__user__
         }
 
 @get('/manage/comments')
 async def manage_comments(request):
     return {
-        '__template__': 'manage_comments.html'
+        '__template__': 'manage_comments.html',
+        'user': request.__user__
         }
 
 @get('/manage/blogs/editor')
 async def create_blog(request, *, id=None):
     return {
         '__template__': 'editor.html',
-        'id': id
+        'id': id,
+        'user': request.__user__
         }
 
 @get('/blog/{id}')
@@ -130,7 +134,8 @@ async def get_blog(request, *, id):
     return {
         '__template__': 'blog.html',
         'comments': comments,
-        'blog': blog
+        'blog': blog,
+        'user': request.__user__
         }
 
 @get('/api/users')
