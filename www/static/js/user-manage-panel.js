@@ -9,7 +9,7 @@ var UserItem = React.createClass({
         <td>{this.props.name}</td>
         <td>{this.props.email}</td>
         <td>{this.sec2Date(this.props.createdAt)}</td>
-        <td>{this.props.admin ? 'Yes' : 'No'}</td>
+        <td>{this.props.admin ? <span className="label label-primary">Yes</span> : <span className="label label-default">No</span>}</td>
       </tr>
     );
   }
