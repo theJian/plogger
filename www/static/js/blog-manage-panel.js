@@ -6,7 +6,7 @@ var BlogItem = React.createClass({
   render: function() {
     return (
         <tr>
-          <td>{this.props.title}</td>
+          <td><span className="badge">{this.props.clicked}</span>{this.props.title}</td>
           <td>{this.props.author}</td>
           <td>{this.sec2Date(this.props.createdAt)}</td>
           <td>
@@ -36,7 +36,7 @@ var BlogList = React.createClass({
           <tbody>
           {
             this.props.blogs.map(function(blog) {
-              return <BlogItem title={blog.name} author={blog.user_name} createdAt={blog.created_at} key={blog.id} onClickEdit={onClickEdit.bind(null, blog.id)} onClickDelete={onClickDelete.bind(null, blog.id)}/>;
+              return <BlogItem title={blog.name} clicked={blog.clicked} author={blog.user_name} createdAt={blog.created_at} key={blog.id} onClickEdit={onClickEdit.bind(null, blog.id)} onClickDelete={onClickDelete.bind(null, blog.id)}/>;
             })
           }
           </tbody>

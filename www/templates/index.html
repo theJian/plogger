@@ -9,10 +9,10 @@
       <article class="blog-post">
         <h2 class="blog-post-title"><a href="/blog/{{blog.id}}">{{blog.name}}</a></h2>
         <p class="blog-post-meta">
-        posted on {{blog.created_at|datetime}} by {{blog.user_name}}
+        posted on {{blog.created_at|datetime}} by {{blog.user_name}} <span class="badge">{{blog.clicked}}</span> click, <span class="badge">{{blog.comment_count}}</span> Comments
         </p>
         <p class="blog-post-summary">{{blog.summary}}</p>
-        <p><a href="/blog/{{blog.id}}">continue</a></p>
+        <p><a href="/blog/{{blog.id}}">continue reading</a></p>
       </article>
       <hr>
     {% endfor %}

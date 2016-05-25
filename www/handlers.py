@@ -54,7 +54,9 @@ async def index(request, *, page=1):
     blog_count = await Blog.findNumber('count(*)')
     page_count = blog_count // page_size + int(blog_count % page_size > 0)
     blogs = await Blog.findAll(orderBy='created_at desc', limit=((page-1)*page_size, page_size))
-    blogs = [Blog(id=blog.id, user_name=blog.user_name, name=blog.name, summary=blog.summary, created_at=blog.created_at) for blog in blogs]
+    blogs = [Blog(id=blog.id, user_name=blog.user_name, name=blog.name, summary=blog.summary, created_at=blog.created_at, clicked=blog.clicked) for blog in blogs]
+    for blog in blogs:
+        blog.comment_count = await Comment.findNumber('count(*)', 'blog_id="%s"' % blog.id)
     return {
         '__template__': 'index.html',
         'blogs': blogs,
@@ -127,6 +129,9 @@ async def create_blog(request, *, id=None):
 @get('/blog/{id}')
 async def get_blog(request, *, id):
     blog = await Blog.find(id)
+    if blog:
+        blog.clicked = blog.clicked + 1
+        await blog.update()
     comments = await Comment.findAll('blog_id=?', [id], orderBy='created_at desc')
     for c in comments:
         c.html_content = markdown2.markdown(c.content, safe_mode=True)
@@ -298,9 +303,3 @@ async def api_create_comments(request, *, blog_id, content):
     comment.html_content = markdown2.markdown(comment.content, safe_mode=True)
     return comment
 
-# @get('/api/test/add-blogs')
-# async def api_create_blog(request, *, count=100):
-#     for i in range(count):
-#         blog = Blog(user_id="001463818576693a6425b8db6c2418795eede6d6dd6eb02000", user_name="thejian", user_image="blank:about", name="test"+str(i), summary="It's summary", content="It's content")
-#         await blog.save()
-#     return 'success'
